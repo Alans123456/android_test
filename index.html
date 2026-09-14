@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Practice test covering all 90 MCQs from the CET343 Android Mobile Development model paper, with instant marking, explanations and a weak-topic breakdown.">
+<meta name="color-scheme" content="light dark">
+<title>CET343 Android Drill</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='10' y='16' width='44' height='36' rx='11' fill='%234fb302'/><circle cx='24' cy='31' r='5' fill='%23fff'/><circle cx='40' cy='31' r='5' fill='%23fff'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="confetti" class="hidden"></canvas>
+
+<!-- ================= HOME ================= -->
+<section id="v-home" class="shell home">
+  <div class="crest">
+    <svg class="bot" viewBox="0 0 64 64" aria-hidden="true">
+      <rect x="10" y="16" width="44" height="36" rx="11" fill="var(--grass)"/>
+      <circle cx="24" cy="31" r="4.6" fill="#fff"/><circle cx="40" cy="31" r="4.6" fill="#fff"/>
+      <rect x="25" y="41" width="14" height="4.4" rx="2.2" fill="#fff" opacity=".85"/>
+      <path d="M20 16 L15 7 M44 16 L49 7" stroke="var(--grass)" stroke-width="4.2" stroke-linecap="round" fill="none"/>
+      <circle cx="14.5" cy="6" r="3.4" fill="var(--bee)"/><circle cx="49.5" cy="6" r="3.4" fill="var(--bee)"/>
+      <rect x="2" y="27" width="7" height="15" rx="3.5" fill="var(--grass-dk)"/>
+      <rect x="55" y="27" width="7" height="15" rx="3.5" fill="var(--grass-dk)"/>
+    </svg>
+    <div>
+      <h1>Android Drill</h1>
+      <div class="tag">CET343 &middot; 90 questions from the model paper</div>
+    </div>
+    <div class="spacer"></div>
+    <button class="iconbtn" id="sound" type="button" aria-label="Toggle sound"></button>
+    <button class="iconbtn" id="theme" type="button" aria-label="Toggle dark mode">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.8 6.8 0 0 0 9.8 9.8Z"/></svg>
+    </button>
+  </div>
+
+  <div class="statrow" id="statrow"></div>
+
+  <div class="blk">
+    <h4>How do you want to practise</h4>
+    <div class="pickrow" id="modes">
+      <button class="pick" type="button" data-mode="practice" aria-pressed="true">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+        <span><strong>Practice</strong><span>Checked as you go, with the reason why</span></span>
+      </button>
+      <button class="pick" type="button" data-mode="exam" aria-pressed="false">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></span>
+        <span><strong>Exam</strong><span>No feedback until the end</span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h4>How many questions</h4>
+    <div class="chips" id="lens">
+      <button class="chip" type="button" data-len="10">10</button>
+      <button class="chip" type="button" data-len="20" aria-pressed="true">20</button>
+      <button class="chip" type="button" data-len="30">30</button>
+      <button class="chip" type="button" data-len="45">45</button>
+      <button class="chip" type="button" data-len="90">All 90</button>
+    </div>
+  </div>
+
+  <div class="blk">
+    <h4>Extras</h4>
+    <div class="switches">
+      <label class="sw"><input type="checkbox" id="o-hearts"><span class="track"><b></b></span>
+        <span class="cap">Hearts<em>Five mistakes and the run ends, like the real thing</em></span></label>
+      <label class="sw"><input type="checkbox" id="o-timer"><span class="track"><b></b></span>
+        <span class="cap">Timer<em>One minute per question</em></span></label>
+      <label class="sw"><input type="checkbox" id="o-weak"><span class="track"><b></b></span>
+        <span class="cap">Hit my weak spots<em id="weaknote">Nothing missed yet</em></span></label>
+      <label class="sw"><input type="checkbox" id="o-order" checked><span class="track"><b></b></span>
+        <span class="cap">Mix up the question order<em>Shorter rounds are always mixed. Turn this off to work through the paper from Q1 to Q90.</em></span></label>
+      <label class="sw"><input type="checkbox" id="o-shuf" checked><span class="track"><b></b></span>
+        <span class="cap">Shuffle the answers<em>So you cannot memorise the letter</em></span></label>
+    </div>
+  </div>
+
+  <div class="golive">
+    <button class="btn big" id="go" type="button">Start</button>
+    <span class="meta" id="gometa"></span>
+  </div>
+
+  <p class="fineprint">Questions come straight from <b>CET343_Android_Mobile_Development_Model Question.pdf</b>. Questions 77 to 81 are marked against how Android actually works, because the paper's own answer key is wrong for those five. Each of them tells you so when you get there.</p>
+  <p class="syncline" id="syncline">Your XP, scores and weak spots are saved in this browser.</p>
+</section>
+
+<!-- ================= LESSON ================= -->
+<section id="v-lesson" class="hidden">
+  <div class="topbar">
+    <div class="shell row">
+      <button class="quitbtn" id="quit" type="button" aria-label="Quit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+      <div class="pbar"><i id="fill" class="empty"></i></div>
+      <div class="streak hidden" id="streak">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.4 1.6c.3 3.2-1.2 4.6-2.7 6.1C9.1 9.3 7.5 11 7.5 14a6 6 0 0 0 12 0c0-4.4-3-6.4-6.1-12.4Z"/><path d="M6.1 12.2C5 13.3 4.5 14.8 4.5 16.3a5 5 0 0 0 4.2 4.9c-1.6-1.4-2.2-3-2.2-4.6 0-1.6.5-3 1.4-4.1a3.6 3.6 0 0 1-1.8-.3Z" opacity=".55"/></svg>
+        <span id="streakn">0</span>
+      </div>
+      <div class="gauge hidden" id="hearts">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21s-8-4.9-8-10.4A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 3.6C20 16.1 12 21 12 21Z"/></svg>
+        <span id="heartn">5</span>
+      </div>
+      <div class="gauge hidden" id="clock" style="color:var(--wolf)">
+        <span id="clockn"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="shell lesson">
+    <div class="qmeta">
+      <span class="pill" id="qref">Q1</span>
+      <span class="pill" id="qtopic">Topic</span>
+      <span class="pill warn hidden" id="qflag">Key disputed</span>
+    </div>
+    <h2 class="qtext" id="qtext"></h2>
+    <div class="choices" id="choices"></div>
+  </div>
+
+  <div class="dock" id="dock">
+    <div class="verdict" id="verdict">
+      <div class="head">
+        <span class="mark" id="vmark"></span>
+        <h3 id="vtitle"></h3>
+      </div>
+      <p class="sol hidden" id="vsol"></p>
+      <p class="why" id="vwhy"></p>
+      <div class="note hidden" id="vnote"></div>
+    </div>
+    <div class="inner">
+      <button class="btn hollow" id="skip" type="button">Skip</button>
+      <span class="grow"></span>
+      <span class="hintline" id="hint">Pick with 1&ndash;4, check with Enter</span>
+      <button class="btn" id="act" type="button" disabled>Check</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESULTS ================= -->
+<section id="v-done" class="hidden shell done">
+  <svg class="trophy" viewBox="0 0 64 64" aria-hidden="true" id="trophy">
+    <path d="M16 10h32v9a16 16 0 0 1-32 0v-9Z" fill="var(--bee)"/>
+    <path d="M16 13H9v4a9 9 0 0 0 8 9M48 13h7v4a9 9 0 0 1-8 9" stroke="var(--bee-dk)" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    <rect x="28" y="33" width="8" height="12" fill="var(--bee-dk)"/>
+    <rect x="19" y="45" width="26" height="7" rx="3.5" fill="var(--bee-dk)"/>
+    <path d="M32 15.5l2.2 4.5 5 .7-3.6 3.5.9 4.9-4.5-2.4-4.5 2.4.9-4.9L24.8 20.7l5-.7Z" fill="#fff" opacity=".9"/>
+  </svg>
+  <h2 id="dtitle">Lesson complete</h2>
+  <p class="sub" id="dsub"></p>
+  <span class="band" id="dband"></span>
+
+  <div class="tiles">
+    <div class="tile t1"><div class="l">Total XP</div><div><div class="v"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg><span id="dxp">0</span></div></div></div>
+    <div class="tile t2"><div class="l">Score</div><div><div class="v"><span id="dscore">0%</span></div></div></div>
+    <div class="tile t3"><div class="l" id="dmetal">Correct</div><div><div class="v"><span id="draw">0/0</span></div></div></div>
+  </div>
+
+  <div class="sect">
+    <h3>Where your marks went</h3>
+    <p class="lede">Anything under 60% is worth revising before the next go.</p>
+    <div class="tlist" id="topics"></div>
+  </div>
+
+  <div class="sect">
+    <h3>Every question, marked</h3>
+    <p class="lede">All four options are shown. Green is the right answer, red is what you picked if it was wrong.</p>
+    <div class="tabs" id="tabs">
+      <button class="tab" type="button" data-f="all" aria-pressed="true">All</button>
+      <button class="tab" type="button" data-f="no">Missed</button>
+      <button class="tab" type="button" data-f="ok">Right</button>
+    </div>
+    <div class="rlist" id="rlist"></div>
+  </div>
+
+  <div class="endbtns">
+    <button class="btn wide big" id="redo" type="button">Practise my mistakes</button>
+    <button class="btn blue wide" id="again" type="button">Another round</button>
+    <button class="btn hollow wide" id="home" type="button">Back to start</button>
+  </div>
+</section>
+
+<script src="questions.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
