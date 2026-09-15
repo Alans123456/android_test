@@ -92,3 +92,4 @@ window.QUESTIONS = [
 {n:89,t:"Testing & Build",q:"What is ProGuard primarily used for?",o:["Creating layouts","Code obfuscation and optimization","Database management","Network requests"],a:1,e:"ProGuard (now R8) shrinks, optimises and obfuscates code, which reduces APK size and makes reverse engineering harder."},
 {n:90,t:"Lifecycle & Components",q:"A device has low memory and the app's Activity is in the background. Which lifecycle method is most likely to be called?",o:["onResume()","onStart()","onDestroy()","onPause()"],a:2,e:"Under memory pressure the system kills background activities, so onDestroy() is the likely callback. Note it may be skipped entirely if the process is killed outright."}
 ];
+window.ANDROID_QUESTIONS = window.QUESTIONS;
