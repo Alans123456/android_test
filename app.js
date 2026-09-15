@@ -116,7 +116,9 @@ function weakOnes(){
   return out;
 }
 function paintHome(){
-  var w = weakOnes(), runs = store.runs || [];
+  var w = weakOnes(), runs = (store.runs || []).filter(function(r){
+    return !r.bank || r.bank === bankId;
+  });
   $("weaknote").textContent = w.length
     ? w.length + " question" + (w.length===1?"":"s") + " you have got wrong before"
     : "Nothing missed yet";
@@ -195,9 +197,8 @@ function build(pool, len){
     var rest = shuffle(pool.filter(function(q){ return wn.indexOf(q.n)===-1; }));
     picked = shuffle(first.concat(rest).slice(0, len));
   }else{
-    picked = shuffle(pool.slice()).slice(0, len);
+    picked = cfg.mix ? shuffle(pool.slice()).slice(0, len) : pool.slice().sort(function(a,b){ return a.n-b.n; }).slice(0, len);
   }
-  if(len >= 90 && !cfg.mix) picked.sort(function(a,b){ return a.n-b.n; });
   return picked.map(function(q){
     var order = [0,1,2,3];
     if(cfg.shuf) shuffle(order);
@@ -423,7 +424,7 @@ function finish(timedOut, outOfHearts){
   var pct = Math.round(score/total*100);
   var mins = Math.max(1, Math.round((Date.now()-run.t0)/60000));
 
-  store.runs = (store.runs||[]).concat([{ at:Date.now(), score:score, total:total, mode:cfg.mode }]);
+  store.runs = (store.runs||[]).concat([{ at:Date.now(), score:score, total:total, mode:cfg.mode, bank:bankId }]);
   if(store.runs.length > 80) store.runs = store.runs.slice(-80);
   store.xp = (store.xp||0) + run.xp;
   persist();
