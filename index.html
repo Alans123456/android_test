@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Practice test covering all 90 MCQs from the CET343 Android Mobile Development model paper, with instant marking, explanations and a weak-topic breakdown.">
+<meta name="description" content="Practice Android and Artificial Intelligence MCQs with instant marking, explanations and a weak-topic breakdown.">
 <meta name="color-scheme" content="light dark">
-<title>CET343 Android Drill</title>
+<title>Android &amp; AI Drill</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='10' y='16' width='44' height='36' rx='11' fill='%234fb302'/><circle cx='24' cy='31' r='5' fill='%23fff'/><circle cx='40' cy='31' r='5' fill='%23fff'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,8 +29,8 @@
       <rect x="55" y="27" width="7" height="15" rx="3.5" fill="var(--grass-dk)"/>
     </svg>
     <div>
-      <h1>Android Drill</h1>
-      <div class="tag">CET343 &middot; 90 questions from the model paper</div>
+      <h1 id="title">Android Drill</h1>
+      <div class="tag" id="banktag">CET343 &middot; Android MCQs</div>
     </div>
     <div class="spacer"></div>
     <button class="iconbtn" id="sound" type="button" aria-label="Toggle sound"></button>
@@ -40,6 +40,20 @@
   </div>
 
   <div class="statrow" id="statrow"></div>
+
+  <div class="blk">
+    <h4>What do you want to practise?</h4>
+    <div class="pickrow" id="subjects">
+      <button class="pick" type="button" data-bank="android" aria-pressed="true">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M8 7 6 4M16 7l2-3M8 12h.01M16 12h.01M9 16h6"/></svg></span>
+        <span><strong>Android</strong><span>Mobile development MCQs</span></span>
+      </button>
+      <button class="pick" type="button" data-bank="ai" aria-pressed="false">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M7 7l-3-2M17 7l3-2M5 11h14v6a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4v-6Z"/><path d="M9 15h.01M15 15h.01M9 18h6"/></svg></span>
+        <span><strong>AI</strong><span>Artificial Intelligence MCQs</span></span>
+      </button>
+    </div>
+  </div>
 
   <div class="blk">
     <h4>How do you want to practise</h4>
@@ -62,7 +76,7 @@
       <button class="chip" type="button" data-len="20" aria-pressed="true">20</button>
       <button class="chip" type="button" data-len="30">30</button>
       <button class="chip" type="button" data-len="45">45</button>
-      <button class="chip" type="button" data-len="90">All 90</button>
+      <button class="chip" type="button" data-len="90" id="all-len">All 90</button>
     </div>
   </div>
 
@@ -87,7 +101,7 @@
     <span class="meta" id="gometa"></span>
   </div>
 
-  <p class="fineprint">Questions come straight from <b>CET343_Android_Mobile_Development_Model Question.pdf</b>. Questions 77 to 81 are marked against how Android actually works, because the paper's own answer key is wrong for those five. Each of them tells you so when you get there.</p>
+  <p class="fineprint" id="fineprint">Questions come straight from <b>CET343_Android_Mobile_Development_Model Question.pdf</b>. Questions 77 to 81 are marked against how Android actually works, because the paper's own answer key is wrong for those five. Each of them tells you so when you get there.</p>
   <p class="syncline" id="syncline">Your XP, scores and weak spots are saved in this browser.</p>
 </section>
 
@@ -186,6 +200,7 @@
 </section>
 
 <script src="questions.js"></script>
+<script src="AI_questions"></script>
 <script src="app.js"></script>
 </body>
 </html>
