@@ -1,6 +1,11 @@
 (function(){
 "use strict";
-var Q = window.QUESTIONS || [];
+var banks = {
+  android: { name:"Android", tag:"CET343 · Android MCQs", questions:window.ANDROID_QUESTIONS || [] },
+  ai: { name:"AI", tag:"Artificial Intelligence MCQs", questions:window.AI_QUESTIONS || [] }
+};
+var bankId = "android";
+var Q = banks[bankId].questions;
 var L = ["A","B","C","D"];
 var KEY = "cet343-drill-v2";
 var $ = function(id){ return document.getElementById(id); };
@@ -104,7 +109,8 @@ function weakOnes(){
   var out = [];
   for(var k in store.stats){
     var s = store.stats[k];
-    if(s.wrong > 0) out.push({ n:parseInt(k,10), rate:s.wrong/Math.max(1,s.seen), wrong:s.wrong });
+    if(k.indexOf(bankId + ":") !== 0) continue;
+    if(s.wrong > 0) out.push({ n:parseInt(k.slice(bankId.length + 1),10), rate:s.wrong/Math.max(1,s.seen), wrong:s.wrong });
   }
   out.sort(function(a,b){ return (b.rate-a.rate) || (b.wrong-a.wrong); });
   return out;
@@ -127,9 +133,29 @@ function paintHome(){
 function tileHome(cls, val, lab){
   return '<div class="stat '+cls+'"><div class="n">'+val+'</div><div class="l">'+lab+'</div></div>';
 }
+function statKey(n){ return bankId + ":" + n; }
+function selectBank(id){
+  bankId = id;
+  Q = banks[bankId].questions;
+  $("title").textContent = banks[bankId].name + " Drill";
+  $("banktag").textContent = banks[bankId].tag;
+  $("all-len").textContent = "All " + Q.length;
+  $("fineprint").innerHTML = bankId === "android"
+    ? 'Questions come straight from <b>CET343_Android_Mobile_Development_Model Question.pdf</b>. Questions 77 to 81 are marked against how Android actually works, because the paper\'s own answer key is wrong for those five. Each of them tells you so when you get there.'
+    : 'Questions come from the Artificial Intelligence MCQ question bank. Every question has four options and an explanation after marking.';
+  if(cfg.len > Q.length) cfg.len = Q.length;
+  press(subjectBtns, function(x){ return x.dataset.bank === bankId; });
+  press(lenBtns, function(x){ return parseInt(x.dataset.len,10) === cfg.len; });
+  meta();
+  paintHome();
+}
 paintHome();
 
 function press(list, hit){ list.forEach(function(b){ b.setAttribute("aria-pressed", hit(b)?"true":"false"); }); }
+var subjectBtns = [].slice.call(document.querySelectorAll("#subjects .pick"));
+subjectBtns.forEach(function(b){ b.addEventListener("click", function(){
+  selectBank(b.dataset.bank); play("tap");
+});});
 var modeBtns = [].slice.call(document.querySelectorAll("#modes .pick"));
 modeBtns.forEach(function(b){ b.addEventListener("click", function(){
   cfg.mode = b.dataset.mode; press(modeBtns, function(x){ return x===b; }); play("tap"); meta();
@@ -142,9 +168,10 @@ lenBtns.forEach(function(b){ b.addEventListener("click", function(){
   $(p[0]).addEventListener("change", function(e){ cfg[p[1]] = e.target.checked; play("tap"); meta(); });
 });
 function meta(){
-  var s = cfg.len + (cfg.len===90 ? " questions, the whole paper" : " questions");
-  if(cfg.len >= 90) s += cfg.mix ? ", mixed up" : ", in paper order";
-  if(cfg.timer) s += " in " + cfg.len + " min";
+  var count = Math.min(cfg.len, Q.length);
+  var s = count + (count >= Q.length ? " questions, the whole bank" : " questions");
+  if(count >= Q.length) s += cfg.mix ? ", mixed up" : ", in paper order";
+  if(cfg.timer) s += " in " + count + " min";
   if(cfg.hearts) s += ", 5 hearts";
   $("gometa").textContent = s;
 }
@@ -274,9 +301,9 @@ function grade(){
   it.pick = it.order[it.sel];
   var right = it.pick === q.a;
 
-  var s = store.stats[q.n] || { seen:0, wrong:0 };
+  var s = store.stats[statKey(q.n)] || { seen:0, wrong:0 };
   s.seen++; if(!right) s.wrong++;
-  store.stats[q.n] = s;
+  store.stats[statKey(q.n)] = s;
 
   if(right){
     run.streak++;
